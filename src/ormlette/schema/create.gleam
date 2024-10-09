@@ -75,8 +75,8 @@ pub fn foreign_key(
   col: Column,
   references_table: Table,
   references_column: String,
-  on_delete: Option(String),
-  on_update: Option(String),
+  // on_delete: Option(String),
+  // on_update: Option(String),
 ) -> Column {
   // Validate that the referenced column exists in the target table
   let column_exists =
@@ -97,8 +97,8 @@ pub fn foreign_key(
         references: Some(Reference(
           table: references_table,
           column: references_column,
-          on_delete: on_delete,
-          on_update: on_update,
+          on_delete: option.None,
+          on_update: option.None,
         )),
       )
     False -> panic("Referenced column does not exist in the target table")

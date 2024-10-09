@@ -2,19 +2,27 @@
 # You typically do not need to edit this file
 
 packages = [
+  { name = "backoff", version = "1.1.6", build_tools = ["rebar3"], requirements = [], otp_app = "backoff", source = "hex", outer_checksum = "CF0CFFF8995FB20562F822E5CC47D8CCF664C5ECDC26A684CBE85C225F9D7C39" },
   { name = "cake", version = "1.1.2", build_tools = ["gleam"], requirements = ["gleam_stdlib"], otp_app = "cake", source = "hex", outer_checksum = "E94EAD4800A3CAE0B426E7093F8D82C10C3638D3D400CB95B5C6EF1FF9C3B4A4" },
+  { name = "decode", version = "0.2.1", build_tools = ["gleam"], requirements = ["gleam_stdlib"], otp_app = "decode", source = "hex", outer_checksum = "4727FC627B803E4F4FF0075B5F93BC022F9293A19B03BF44B5A4C64BF9E8EAE1" },
   { name = "filepath", version = "1.0.0", build_tools = ["gleam"], requirements = ["gleam_stdlib"], otp_app = "filepath", source = "hex", outer_checksum = "EFB6FF65C98B2A16378ABC3EE2B14124168C0CE5201553DE652E2644DCFDB594" },
+  { name = "gleam_pgo", version = "0.14.0", build_tools = ["gleam"], requirements = ["gleam_stdlib", "pgo"], otp_app = "gleam_pgo", source = "hex", outer_checksum = "12256A7F351E994A6E43AB67276DD8AACE752991C013F48A288C4A848F3A9758" },
   { name = "gleam_stdlib", version = "0.40.0", build_tools = ["gleam"], requirements = [], otp_app = "gleam_stdlib", source = "hex", outer_checksum = "86606B75A600BBD05E539EB59FABC6E307EEEA7B1E5865AFB6D980A93BCB2181" },
   { name = "gleeunit", version = "1.2.0", build_tools = ["gleam"], requirements = ["gleam_stdlib"], otp_app = "gleeunit", source = "hex", outer_checksum = "F7A7228925D3EE7D0813C922E062BFD6D7E9310F0BEE585D3A42F3307E3CFD13" },
   { name = "globlin", version = "2.0.2", build_tools = ["gleam"], requirements = ["gleam_stdlib"], otp_app = "globlin", source = "hex", outer_checksum = "393E3421E4DA269B0E6025D69DA0F2D3DDD8517500F6BA2AE3C4024FA5F0B498" },
   { name = "globlin_fs", version = "2.0.0", build_tools = ["gleam"], requirements = ["filepath", "gleam_stdlib", "globlin", "simplifile"], otp_app = "globlin_fs", source = "hex", outer_checksum = "2A84CE81FD7958B967EF39CC234AFB64DAB20169D0EF9B9C3943CD3C5B561182" },
+  { name = "opentelemetry_api", version = "1.4.0", build_tools = ["rebar3", "mix"], requirements = [], otp_app = "opentelemetry_api", source = "hex", outer_checksum = "3DFBBFAA2C2ED3121C5C483162836C4F9027DEF469C41578AF5EF32589FCFC58" },
+  { name = "pg_types", version = "0.4.0", build_tools = ["rebar3"], requirements = [], otp_app = "pg_types", source = "hex", outer_checksum = "B02EFA785CAECECF9702C681C80A9CA12A39F9161A846CE17B01FB20AEEED7EB" },
+  { name = "pgo", version = "0.14.0", build_tools = ["rebar3"], requirements = ["backoff", "opentelemetry_api", "pg_types"], otp_app = "pgo", source = "hex", outer_checksum = "71016C22599936E042DC0012EE4589D24C71427D266292F775EBF201D97DF9C9" },
   { name = "shellout", version = "1.6.0", build_tools = ["gleam"], requirements = ["gleam_stdlib"], otp_app = "shellout", source = "hex", outer_checksum = "E2FCD18957F0E9F67E1F497FC9FF57393392F8A9BAEAEA4779541DE7A68DD7E0" },
   { name = "simplifile", version = "2.2.0", build_tools = ["gleam"], requirements = ["filepath", "gleam_stdlib"], otp_app = "simplifile", source = "hex", outer_checksum = "0DFABEF7DC7A9E2FF4BB27B108034E60C81BEBFCB7AB816B9E7E18ED4503ACD8" },
 ]
 
 [requirements]
 cake = { version = ">= 1.1.2 and < 2.0.0" }
+decode = { version = ">= 0.2.1 and < 1.0.0" }
 filepath = { version = ">= 1.0.0 and < 2.0.0" }
+gleam_pgo = { version = ">= 0.14.0 and < 1.0.0" }
 gleam_stdlib = { version = ">= 0.34.0 and < 2.0.0" }
 gleeunit = { version = ">= 1.0.0 and < 2.0.0" }
 globlin = { version = ">= 2.0.2 and < 3.0.0" }

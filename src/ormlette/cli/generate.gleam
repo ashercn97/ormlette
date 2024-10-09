@@ -1,10 +1,10 @@
 import filepath
+import gleam/io
 import gleam/option
 import ormlette/cli/schema
 import ormlette/templates/generate
 import ormlette/templates/utils/to_string
 import simplifile
-import gleam/io
 
 pub fn create_generate_file() {
   let schema_files = option.unwrap(schema.find_schema_files(), [])

@@ -1,9 +1,9 @@
+import filepath
 import ormlette/schema/create as c
 import simplifile
-import filepath
 
-pub fn coltype(col: c.ColumnType) {
-  case col {
+pub fn coltype(col: c.Column) {
+  case col.type_ {
     c.Int -> "Int"
     c.Bool -> "Bool"
     c.ForeignKey -> "Int"
@@ -11,6 +11,16 @@ pub fn coltype(col: c.ColumnType) {
     c.String -> "String"
   }
 }
+
+pub fn decode_type(col: c.Column) {
+  case col.type_ {
+    c.Int -> "decode.int"
+    c.Bool -> "decode.bool"
+    c.ForeignKey -> "decode.int"
+    c.String -> "decode.string"
+  }
+}
+
 
 pub type Style {
   Append

@@ -56,10 +56,10 @@
 //   |> to_string.to_file("./src/output.gleam", to_string.Write)
 // }
 
-import ormlette/cli/generate
-import simplifile
-import shellout
 import gleam/io
+import ormlette/cli/generate
+import shellout
+import simplifile
 
 pub fn main() {
   generate.create_generate_file()
