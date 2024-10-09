@@ -1,0 +1,18 @@
+{> import ormlette/schema/create as c 
+{> import gleam/string
+{> import ormlette/templates/utils/to_string
+{> with tables as List(c.Table)
+
+{%for table as c.Table in tables %}
+pub type {{ string.capitalise(table.name) }} {
+{{string.capitalise(table.name)}}(
+{% for col as c.Column in table.columns %}
+   {{ col.name }}: String,
+{% endfor %}
+    )
+}
+
+pub fn {{ string.lowercase(table.name) }}() -> {{ string.capitalise(table.name) }}{
+    {{ string.capitalise(table.name) }}({% for col as c.Column in table.columns %} {{col.name}}: "{{table.name}}.{{col.name}}", {% endfor %} )
+}
+{% endfor %}
