@@ -6,6 +6,7 @@
 {> import gleam/iterator
 {> import ormlette/templates/utils/to_string
 {> import ormlette/templates/utils/listy
+{> import gleam/int
 
 import decode
 import gleam/option.{ type Option }
@@ -16,7 +17,7 @@ pub type {{ string.capitalise(table.name) }} {
   {{ string.capitalise(table.name) }}({% for col as c.Column in table.columns %}{{ col.name }}: Option({{ to_string.coltype(col) }}), {% endfor %})
 }
 
-pub fn {{ string.capitalise(table.name) }}_decoder(db: pgo.Connection) {
+pub fn {{ table.name }}_decoder() {
     decode.into({
       {% for col as c.Column in table.columns %}
       use {{ col.name }} <- decode.parameter
@@ -24,7 +25,7 @@ pub fn {{ string.capitalise(table.name) }}_decoder(db: pgo.Connection) {
       {{ string.capitalise(table.name) }}({% for col as c.Column in table.columns %}{{ col.name }}: {{ col.name }}, {% endfor %})
     })
     {% for i as Int in iterator.to_list(iterator.range(0, list.length(table.columns) - 1)) %}
-    |> decode.field(i, decode.optional({{ to_string.decode_type(listy.index(table.columns, i)) }}))
+    |> decode.field({{ int.to_string(i) }}, decode.optional({{ to_string.decode_type(listy.index(table.columns, i)) }}))
     {% endfor %}
 }
 {% endfor %}

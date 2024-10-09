@@ -9,6 +9,7 @@ import ormlette/ir/sql
 import gleam/iterator
 import ormlette/templates/utils/to_string
 import ormlette/templates/utils/listy
+import gleam/int
 
 pub fn render_builder(tables tables: List(c.Table)) -> StringBuilder {
     let builder = string_builder.from_string("")
@@ -40,8 +41,8 @@ pub type ")
 }
 
 pub fn ")
-    let builder = string_builder.append(builder, string.capitalise(table.name))
-    let builder = string_builder.append(builder, "_decoder(db: pgo.Connection) {
+    let builder = string_builder.append(builder, table.name)
+    let builder = string_builder.append(builder, "_decoder() {
     decode.into({
       ")
     let builder = list.fold(table.columns, builder, fn(builder, col: c.Column) {
@@ -70,7 +71,9 @@ pub fn ")
     ")
     let builder = list.fold(iterator.to_list(iterator.range(0, list.length(table.columns) - 1)), builder, fn(builder, i: Int) {
             let builder = string_builder.append(builder, "
-    |> decode.field(i, decode.optional(")
+    |> decode.field(")
+    let builder = string_builder.append(builder, int.to_string(i))
+    let builder = string_builder.append(builder, ", decode.optional(")
     let builder = string_builder.append(builder, to_string.decode_type(listy.index(table.columns, i)))
     let builder = string_builder.append(builder, "))
     ")
