@@ -9,6 +9,7 @@ pub fn coltype(col: c.Column) {
     c.ForeignKey -> "Int"
     // TODO make work better
     c.String -> "String"
+    c.Serial -> "Int"
   }
 }
 
@@ -18,6 +19,7 @@ pub fn decode_type(col: c.Column) {
     c.Bool -> "decode.bool"
     c.ForeignKey -> "decode.int"
     c.String -> "decode.string"
+    c.Serial -> "decode.int"
   }
 }
 

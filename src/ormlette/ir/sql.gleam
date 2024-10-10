@@ -14,6 +14,7 @@ pub fn helper(column: ir.ColumnIR) {
     c.ForeignKey -> {
       "int"
     }
+    c.Serial -> "SERIAL"
   }
 }
 

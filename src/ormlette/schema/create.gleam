@@ -18,6 +18,7 @@ pub type ColumnType {
   String
   Bool
   ForeignKey
+  Serial
 }
 
 // Column type with dynamic type to allow mixed types in a list
@@ -46,7 +47,7 @@ pub type Reference {
 
 // Helper functions to create Columns with defaults and attribute functions
 
-pub fn int_column(name: String) -> Column {
+pub fn int(name: String) -> Column {
   Column(
     name: name,
     type_: Int,
@@ -58,13 +59,26 @@ pub fn int_column(name: String) -> Column {
   )
 }
 
-pub fn text_column(name: String) -> Column {
+pub fn text(name: String) -> Column {
   Column(
     name: name,
     type_: String,
     is_primary: False,
     is_nullable: False,
     is_unique: False,
+    default: None,
+    references: None,
+  )
+}
+
+
+pub fn serial(name: String) -> Column {
+  Column(
+    name: name,
+    type_: Serial,
+    is_primary: True,
+    is_nullable: False,
+    is_unique: True,
     default: None,
     references: None,
   )
@@ -230,5 +244,6 @@ pub fn dbtype_to_string(dbtype: ColumnType) -> String {
     String -> "text"
     Bool -> "bool"
     ForeignKey -> "int"
+    Serial -> "int"
   }
 }
