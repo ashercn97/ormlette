@@ -12,7 +12,33 @@ pub fn helper(column: ir.ColumnIR) {
     c.Bool -> "bool"
     c.String -> "text"
     c.ForeignKey -> {
-      "int"
+      let hi = case
+        list.first(
+          list.filter(column.constraints, fn(con) {
+            case con {
+              ir.ForeignKey(_, _, _, _) -> True
+              _ -> False
+            }
+          }),
+        )
+      {
+        Ok(v) -> {
+          case v {
+            ir.ForeignKey(references_table, reference_column, _, _) -> {
+              let col =
+                list.find(references_table.columns, fn(col) {
+                  col.name == reference_column
+                })
+              case col {
+                Ok(found_col) -> helper(found_col)
+                Error(_) -> panic
+              }
+            }
+            _ -> panic
+          }
+        }
+        Error(_) -> panic
+      }
     }
     c.Serial -> "SERIAL"
   }
