@@ -23,7 +23,6 @@ pub fn decode_type(col: c.Column) {
   }
 }
 
-
 pub type Style {
   Append
   Write

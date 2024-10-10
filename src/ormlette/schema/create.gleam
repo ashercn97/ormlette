@@ -71,7 +71,6 @@ pub fn text(name: String) -> Column {
   )
 }
 
-
 pub fn serial(name: String) -> Column {
   Column(
     name: name,
