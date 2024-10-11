@@ -39,7 +39,6 @@ Here is what the query DSL looks like:
 ```gleam
 q.from_table(posts_table)
     |> q.inner_join(users_table)
-    |> q.inner_join(users_table)
     |> q.select(["users.name", "posts.id", "posts.user_id"])
     |> q.sql
     |> io.debug()
