@@ -1,3 +1,6 @@
+///// This uses a matcha template to generate a file that will be used to generate the schema files.
+////
+
 import filepath
 import gleam/io
 import gleam/option

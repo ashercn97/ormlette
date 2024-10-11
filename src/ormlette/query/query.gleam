@@ -1,12 +1,16 @@
+//// The main Query module that provides a high-level API for building SQL queries
+//// It is built on top of the Cake library to provide a more ergonomic interface, but can easily be exported
+//// to standard cake-select queries.
+
 import cake
 import cake/dialect/postgres_dialect
 import cake/join
 import cake/select
 import cake/where
 import gleam/dynamic
-import gleam/string
 import gleam/list
 import gleam/option.{None, Some}
+import gleam/string
 import ormlette/schema/create
 
 // Helper function to find a column by name in a table, returning Option instead of Result
@@ -121,7 +125,11 @@ pub fn left_join(query: Query, target_table: create.Table) -> Query {
 pub fn select(query: Query, columns: List(String)) -> Query {
   let select_query =
     list.fold(columns, query.select, fn(column, select_query) {
-      select.select(column, select.col(select_query) |> select.alias(string.replace(select_query, ".", "_")))
+      select.select(
+        column,
+        select.col(select_query)
+          |> select.alias(string.replace(select_query, ".", "_")),
+      )
     })
   Query(query.table, select_query)
 }

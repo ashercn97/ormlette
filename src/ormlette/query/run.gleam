@@ -1,3 +1,5 @@
+//// This is used to help run the output of `src/ormlette/query/query.sql()` output
+
 import cake/param
 import gleam/list
 import gleam/pgo

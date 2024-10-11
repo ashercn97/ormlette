@@ -1,3 +1,5 @@
+//// This module helps convert the IR defined in `ir/ir` to SQL strings.
+
 import gleam/dynamic
 import gleam/int
 import gleam/list
@@ -6,6 +8,7 @@ import gleam/string
 import ormlette/ir/ir
 import ormlette/schema/create as c
 
+/// This needs a better name. But, it basically helps determine the SQL type of a column.
 pub fn helper(column: ir.ColumnIR) {
   case column.type_ {
     c.Int -> "int"
@@ -44,6 +47,7 @@ pub fn helper(column: ir.ColumnIR) {
   }
 }
 
+/// This converts IR to SQL
 pub fn to_sql(table_ir: ir.TableIR) -> String {
   let columns_sql =
     table_ir.columns
@@ -53,6 +57,7 @@ pub fn to_sql(table_ir: ir.TableIR) -> String {
   "CREATE TABLE " <> table_ir.name <> " (" <> columns_sql <> ");"
 }
 
+/// This converts column IR to SQL
 fn column_to_sql(column_ir: ir.ColumnIR) -> String {
   let constraints_sql =
     column_ir.constraints
@@ -73,7 +78,7 @@ fn column_to_sql(column_ir: ir.ColumnIR) -> String {
   <> default_sql
 }
 
-// Update constraint_to_sql to handle foreign keys
+/// Converts a column constraint to SQL
 fn constraint_to_sql(constraint: ir.ColumnConstraint) -> String {
   case constraint {
     ir.PrimaryKey -> "PRIMARY KEY"
@@ -96,6 +101,7 @@ fn constraint_to_sql(constraint: ir.ColumnConstraint) -> String {
   }
 }
 
+/// This turns a dynamic values to SQL. Helper func
 fn dynamic_to_sql(value: dynamic.Dynamic) -> String {
   case dynamic.string(value) {
     Ok(str_val) -> "'" <> str_val <> "'"
