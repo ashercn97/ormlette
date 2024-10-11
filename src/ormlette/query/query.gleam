@@ -4,6 +4,7 @@ import cake/join
 import cake/select
 import cake/where
 import gleam/dynamic
+import gleam/string
 import gleam/list
 import gleam/option.{None, Some}
 import ormlette/schema/create
@@ -92,7 +93,10 @@ pub fn join(
       let join_clause =
         join_type(
           join.table(target_table.name),
-          where.eq(where.col(source_col.name), where.col(target_col.name)),
+          where.eq(
+            where.col(query.table.name <> "." <> source_col.name),
+            where.col(target_table.name <> "." <> target_col.name),
+          ),
           target_table.name,
         )
       let joined_query = select.join(query.select, join_clause)
@@ -117,7 +121,7 @@ pub fn left_join(query: Query, target_table: create.Table) -> Query {
 pub fn select(query: Query, columns: List(String)) -> Query {
   let select_query =
     list.fold(columns, query.select, fn(column, select_query) {
-      select.select(column, select.col(select_query))
+      select.select(column, select.col(select_query) |> select.alias(string.replace(select_query, ".", "_")))
     })
   Query(query.table, select_query)
 }

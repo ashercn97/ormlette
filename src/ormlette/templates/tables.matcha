@@ -1,9 +1,12 @@
 {> import ormlette/schema/create as c 
 {> import gleam/string
 {> import ormlette/templates/utils/to_string
+{> import ormlette/templates/utils/combine
+{> import gleam/option
+{> import gleam/io
 {> with tables as List(c.Table)
 
-{%for table as c.Table in tables %}
+{% for table as c.Table in tables %}
 pub type {{ string.capitalise(table.name) }} {
 {{string.capitalise(table.name)}}(
 {% for col as c.Column in table.columns %}
@@ -12,7 +15,23 @@ pub type {{ string.capitalise(table.name) }} {
     )
 }
 
-pub fn {{ string.lowercase(table.name) }}() -> {{ string.capitalise(table.name) }}{
-    {{ string.capitalise(table.name) }}({% for col as c.Column in table.columns %} {{col.name}}: "{{table.name}}.{{col.name}}", {% endfor %} )
+pub fn {{ string.lowercase(table.name) }}() -> {{ string.replace(string.capitalise(table.name), "_", "") }}{
+    {{ string.capitalise(table.name) }}({% for col as c.Column in table.columns %} {{col.name}}: "{{string.lowercase(table.name)}}.{{col.name}}", {% endfor %} )
 }
+
+{% for combined_table as c.Table in combine.combine(table) %}
+pub type {{ string.replace(string.capitalise(combined_table.name), "_", "") }} {
+{{string.replace(string.capitalise(combined_table.name), "_", "")}}(
+{% for col_info as combine.ColumnInfo in combine.get_column_info(combined_table) %}
+   {{ col_info.name }}_{{ col_info.reference_table }}: String,  // Use underscore for field names
+{% endfor %}
+    )
+}
+
+pub fn {{ string.lowercase(combined_table.name) }}() -> {{ string.replace(string.capitalise(combined_table.name), "_", "") }}{
+    {{ string.replace(string.capitalise(combined_table.name), "_", "") }}({% for col_info as combine.ColumnInfo in combine.get_column_info(combined_table) %}
+    {{col_info.name}}_{{col_info.reference_table}}: "{{string.lowercase(col_info.name)}}.{{col_info.reference_table}}", {% endfor %} )
+}
+
+{% endfor %}
 {% endfor %}

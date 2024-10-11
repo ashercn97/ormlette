@@ -7,12 +7,17 @@
 {> import ormlette/templates/utils/to_string
 {> import ormlette/templates/utils/listy
 {> import gleam/int
+{> import gleam/result
+{> import ormlette/templates/utils/combine
+
 
 import decode
 import gleam/option.{ type Option }
 import gleam/pgo
 
 {% for table as c.Table in tables %}
+
+
 pub type {{ string.capitalise(table.name) }} {
   {{ string.capitalise(table.name) }}({% for col as c.Column in table.columns %}{{ col.name }}: Option({{ to_string.coltype(col) }}), {% endfor %})
 }
@@ -24,8 +29,31 @@ pub fn {{ table.name }}_decoder() {
       {% endfor %}
       {{ string.capitalise(table.name) }}({% for col as c.Column in table.columns %}{{ col.name }}: {{ col.name }}, {% endfor %})
     })
-    {% for i as Int in iterator.to_list(iterator.range(0, list.length(table.columns) - 1)) %}
-    |> decode.field({{ int.to_string(i) }}, decode.optional({{ to_string.decode_type(listy.index(table.columns, i)) }}))
+    {% for col as c.Column in table.columns %}
+    |> decode.field("{{ table.name }}_{{ col.name }}", decode.optional({{ to_string.decode_type(col) }}))
     {% endfor %}
 }
+
+{% for combined_table as c.Table in combine.combine(table) %}
+
+pub type {{ string.replace(string.capitalise(combined_table.name), "_", "") }} {
+  {{string.replace(string.capitalise(combined_table.name), "_", "")}}(
+    {% for col_stuff in list.zip(combine.get_column_info(combined_table), combined_table.columns) %}{{ col_stuff.0.name }}_{{ col_stuff.0.reference_table }}: Option({{ to_string.coltype(col_stuff.1) }}), {% endfor %}
+  )
+}
+
+pub fn {{ combined_table.name }}_decoder() {
+    decode.into({
+      {% for col_info as combine.ColumnInfo in combine.get_column_info(combined_table) %}
+      use {{ col_info.name }}_{{col_info.reference_table}} <- decode.parameter
+      {% endfor %}
+      {{ string.replace(string.capitalise(combined_table.name), "_", "") }}({% for col_info as combine.ColumnInfo in combine.get_column_info(combined_table) %}{{ col_info.name }}_{{col_info.reference_table}}: {{ col_info.name }}_{{col_info.reference_table}}, {% endfor %})
+    })
+    {% for col_stuff in list.zip(combine.get_column_info(combined_table), combined_table.columns) %}
+    |> decode.field("{{ col_stuff.0.name }}_{{ col_stuff.0.reference_table}}", decode.optional({{ to_string.decode_type(col_stuff.1) }}))
+    {% endfor %}
+}
+
+
+{% endfor %}
 {% endfor %}

@@ -1,8 +1,8 @@
 import filepath
-import ormlette/schema/create as c
-import simplifile
 import gleam/list
 import gleam/option
+import ormlette/schema/create as c
+import simplifile
 
 pub fn coltype(column: c.Column) {
   case column.type_ {
@@ -13,9 +13,7 @@ pub fn coltype(column: c.Column) {
       let hi = case column.references {
         option.Some(ref) -> {
           let col =
-            list.find(ref.table.columns, fn(col) {
-              col.name == ref.column
-            })
+            list.find(ref.table.columns, fn(col) { col.name == ref.column })
           case col {
             Ok(found_col) -> coltype(found_col)
             Error(_) -> panic
@@ -28,7 +26,6 @@ pub fn coltype(column: c.Column) {
   }
 }
 
-
 pub fn decode_type(column: c.Column) {
   case column.type_ {
     c.Int -> "decode.int"
@@ -38,9 +35,7 @@ pub fn decode_type(column: c.Column) {
       let hi = case column.references {
         option.Some(ref) -> {
           let col =
-            list.find(ref.table.columns, fn(col) {
-              col.name == ref.column
-            })
+            list.find(ref.table.columns, fn(col) { col.name == ref.column })
           case col {
             Ok(found_col) -> decode_type(found_col)
             Error(_) -> panic
@@ -52,7 +47,6 @@ pub fn decode_type(column: c.Column) {
     c.Serial -> "decode.int"
   }
 }
-
 
 pub type Style {
   Append

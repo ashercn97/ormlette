@@ -114,7 +114,7 @@ pub fn foreign_key(
           on_update: option.None,
         )),
       )
-    False -> panic("Referenced column does not exist in the target table")
+    False -> panic
   }
 }
 
