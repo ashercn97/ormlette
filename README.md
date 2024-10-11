@@ -47,3 +47,34 @@ q.from_table(posts_table)
 ```
 
 Here is the magical part: the decoder puts the results into a type perfectly, every time. No matter what you select, how you select it, the order, etc., it is all put into the correct type, every time. All with one command!
+
+## CLI
+
+The CLI is how you generate our "universal decoders," decoder types, and usage types. So what are all of these?
+
+### Universal Decoders
+
+Universal decoders are just dynamic decoders. The special part, though, is that they allow you to decode queries EVERY time. This means that even if you make two different `select` queries, each with a different order of selected columns, the **same** decoder will work with both queries!
+
+Moreover, it will also automatically generate join types and decoders with NO extra work from you. This means that if you have two tables that are related, there is no issue decoding these dynamic values! Pretty epic.
+
+### Decoder Types
+
+Decoder types are what the dynamic decoders decode the dynamic values into. This means that you will be able to reference columns of a row, without needing any extra work, and with them being the type you want!
+
+### Usage Types
+
+Usage types are not strictly necessary to enjoy using `ormlette`. But, (in my opinion) make everything much more pleasent. They gaurentee that you do not
+a) miss-spell a column,
+b) reference a column that doesn't exist, and
+c) provide code completeion for the different columns!
+
+Usage types allow you to do something like:
+
+```gleam
+import eggs/tables as t
+
+t.users().id // this gets the users table id column and turns it into something that can be used in a seelct column, for instance
+```
+
+They are automatically generated, and in my opinion are worth using!
