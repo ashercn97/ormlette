@@ -1,74 +1,54 @@
-//// This module helps convert the IR defined in `ir/ir` to SQL strings.
-
 import gleam/dynamic
 import gleam/int
 import gleam/list
-import gleam/option.{None, Some}
+import gleam/option
 import gleam/string
 import ormlette/ir/ir
 import ormlette/schema/create as c
 
-/// This needs a better name. But, it basically helps determine the SQL type of a column.
-pub fn helper(column: ir.ColumnIR) {
+pub fn helper(column: ir.ColumnIR) -> String {
   case column.type_ {
     c.Int -> "int"
     c.Bool -> "bool"
     c.String -> "text"
     c.ForeignKey -> {
-      let hi = case
-        list.first(
-          list.filter(column.constraints, fn(con) {
-            case con {
-              ir.ForeignKey(_, _, _, _) -> True
-              _ -> False
-            }
-          }),
-        )
-      {
-        Ok(v) -> {
-          case v {
-            ir.ForeignKey(references_table, reference_column, _, _) -> {
-              let col =
-                list.find(references_table.columns, fn(col) {
-                  col.name == reference_column
-                })
-              case col {
-                Ok(found_col) -> helper(found_col)
-                Error(_) -> panic
-              }
-            }
+      let fk_constraint =
+        list.filter(column.constraints, fn(con) {
+          case con {
+            ir.ForeignKey(_, _, _, _) -> True
+            _ -> False
+          }
+        })
+      case list.first(fk_constraint) {
+        Ok(ir.ForeignKey(ref_table, ref_column, _, _)) -> {
+          let col =
+            list.find(ref_table.columns, fn(col) { col.name == ref_column })
+          case col {
+            Ok(found_col) -> helper(found_col)
             _ -> panic
           }
         }
         Error(_) -> panic
+        _ -> panic
       }
     }
     c.Serial -> "SERIAL"
   }
 }
 
-/// This converts IR to SQL
 pub fn to_sql(table_ir: ir.TableIR) -> String {
   let columns_sql =
-    table_ir.columns
-    |> list.map(column_to_sql)
-    |> string.join(", ")
-
+    table_ir.columns |> list.map(column_to_sql) |> string.join(", ")
   "CREATE TABLE " <> table_ir.name <> " (" <> columns_sql <> ");"
 }
 
-/// This converts column IR to SQL
 fn column_to_sql(column_ir: ir.ColumnIR) -> String {
   let constraints_sql =
-    column_ir.constraints
-    |> list.map(constraint_to_sql)
-    |> string.join(" ")
-
+    column_ir.constraints |> list.map(constraint_to_sql) |> string.join(" ")
   let default_sql = case column_ir.default {
-    None -> ""
-    Some(value) -> "DEFAULT " <> dynamic_to_sql(value)
+    option.None -> ""
+    option.Some(value) -> "DEFAULT " <> dynamic_to_sql(value)
   }
-
   column_ir.name
   <> " "
   <> helper(column_ir)
@@ -78,7 +58,6 @@ fn column_to_sql(column_ir: ir.ColumnIR) -> String {
   <> default_sql
 }
 
-/// Converts a column constraint to SQL
 fn constraint_to_sql(constraint: ir.ColumnConstraint) -> String {
   case constraint {
     ir.PrimaryKey -> "PRIMARY KEY"
@@ -91,25 +70,31 @@ fn constraint_to_sql(constraint: ir.ColumnConstraint) -> String {
       <> ref_column
       <> ") "
       <> case on_delete {
-        Some(action) -> "ON DELETE " <> action <> " "
-        None -> ""
+        option.Some(action) -> "ON DELETE " <> action <> " "
+        option.None -> ""
       }
       <> case on_update {
-        Some(action) -> "ON UPDATE " <> action
-        None -> ""
+        option.Some(action) -> "ON UPDATE " <> action
+        option.None -> ""
       }
   }
 }
 
-/// This turns a dynamic values to SQL. Helper func
 fn dynamic_to_sql(value: dynamic.Dynamic) -> String {
   case dynamic.string(value) {
     Ok(str_val) -> "'" <> str_val <> "'"
-    Error(_) -> {
+    Error(_) ->
       case dynamic.int(value) {
         Ok(int_val) -> int.to_string(int_val)
-        Error(_) -> panic
+        _ -> panic
       }
-    }
   }
+}
+
+pub fn to_sql_drop(table_ir: ir.TableIR) -> String {
+  "DROP TABLE " <> table_ir.name <> ";"
+}
+
+pub fn to_sql_drop_column(table_name: String, column_name: String) -> String {
+  "ALTER TABLE " <> table_name <> " DROP COLUMN " <> column_name <> ";"
 }

@@ -11,6 +11,9 @@ Ormlette is a delightful ORM (?) for Gleam. It's features include but are not li
 > [!NOTE]
 > THESE DOCS ARE NOT COMPLETE YET!
 
+## Installation
+run `gleam add ormlette` in your project.
+
 ## Schema DSL
 
 The schema DSL is the main way to define your database schema within ormlette. It allows you to define tables, columns, and relationships between tables.

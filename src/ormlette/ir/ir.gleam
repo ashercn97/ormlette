@@ -1,28 +1,21 @@
-//// This is an `intermediate representation` (IR) for the schema definition to convert it to a SQL `CREATE TABLE` statement.
-//// The IR is a data structure that represents the schema in a way that is easy to convert to SQL.
-
 import gleam/dynamic
 import gleam/list
 import gleam/option.{type Option, None, Some}
-import ormlette/schema/create
+import ormlette/schema/create as c
 
-/// The IR type for a table
-/// It contains the table name and a list of columns (Basically the same as the `create.Table` type)
 pub type TableIR {
   TableIR(name: String, columns: List(ColumnIR))
 }
 
-/// This is the IR type for a column.
 pub type ColumnIR {
   ColumnIR(
     name: String,
-    type_: create.ColumnType,
+    type_: c.ColumnType,
     constraints: List(ColumnConstraint),
     default: Option(dynamic.Dynamic),
   )
 }
 
-/// Ir type for a column constraint, such as a `PRIMARY KEY`, `FOREIGN KEY`, `UNIQUE`, etc.
 pub type ColumnConstraint {
   PrimaryKey
   Nullable
@@ -35,13 +28,11 @@ pub type ColumnConstraint {
   )
 }
 
-/// This function converts a `create.Table` to a `TableIR`
-pub fn to_ir(table: create.Table) -> TableIR {
+pub fn to_ir(table: c.Table) -> TableIR {
   TableIR(name: table.name, columns: list.map(table.columns, column_to_ir))
 }
 
-/// This function converts a `create.Column` to a `ColumnIR`
-fn column_to_ir(column: create.Column) -> ColumnIR {
+fn column_to_ir(column: c.Column) -> ColumnIR {
   let constraints =
     list.concat([
       case column.is_primary {
@@ -78,4 +69,12 @@ fn column_to_ir(column: create.Column) -> ColumnIR {
     constraints: constraints,
     default: column.default,
   )
+}
+
+pub fn inverse_ir(table_ir: TableIR) -> String {
+  to_sql_drop(table_ir)
+}
+
+pub fn to_sql_drop(table_ir: TableIR) -> String {
+  "DROP TABLE " <> table_ir.name <> ";"
 }
