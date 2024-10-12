@@ -5,11 +5,12 @@ Ormlette is a delightful ORM (?) for Gleam. It's features include but are not li
 - A (pretty awesome) schema DSL
 - A powerful query DSL that can be exported to `gleam-cake` Select statements, and used directly with `cake`
 - A CLI to automatically generate easy-use types
+- Changesets (like Ecto!)
 
 > Ormlette is currently in the very early stages of development, so advice/feature requests/bug reports are super helpful!
 
 > [!NOTE]
-> THESE DOCS ARE NOT COMPLETE YET!
+> THESE DOCS ARE NOT COMPLETE YET! SOME MIGHT BE OUTDATED, IF SOMETHING DOESNT WORK JUST LEAVE AN ISSUE
 
 ## Installation
 run `gleam add ormlette` in your project.
@@ -31,7 +32,7 @@ pub fn users_table() {
 }
 ```
 
-To generate everything you need to work with databases, run `gleam run -m ormlette` and look in the `src/eggs` directory.
+To generate everything you need to work with databases, run `gleam run -m ormlette -- orm` and look in the `src/eggs` directory.
 
 ## Query DSL
 

@@ -13,22 +13,28 @@ pub type Error {
 
 // The Changeset type wraps a dictionary of data, along with validation errors and validity status.
 pub type Changeset {
-  Changeset(data: dict.Dict(String, Dynamic), errors: List(Error), valid: Bool)
+  Changeset(
+    table: String,
+    data: dict.Dict(String, Dynamic),
+    errors: List(Error),
+    valid: Bool,
+  )
 }
 
 // Initialize a changeset with a dictionary.
-pub fn new(data: dict.Dict(String, Dynamic)) -> Changeset {
-  Changeset(data, [], True)
+pub fn new(table: String, data: dict.Dict(String, Dynamic)) -> Changeset {
+  Changeset(table, data, [], True)
 }
 
 // Validator to ensure a field is present (i.e., not None).
 pub fn validate_present(changeset: Changeset, fields: List(String)) -> Changeset {
-  let Changeset(data, errors, valid) = changeset
+  let Changeset(table, data, errors, valid) = changeset
 
   list.fold(fields, changeset, fn(changeset, field) {
     case dict.get(data, field) {
       Error(_) ->
         Changeset(
+          table,
           data,
           list.append([FieldError(field, "must be present")], errors),
           False,
@@ -40,7 +46,7 @@ pub fn validate_present(changeset: Changeset, fields: List(String)) -> Changeset
 
 // Validator to ensure a field value has a minimum integer value.
 pub fn validate_min(changeset: Changeset, field: String, min: Int) -> Changeset {
-  let Changeset(data, errors, valid) = changeset
+  let Changeset(table, data, errors, valid) = changeset
   let is_smaller =
     result.unwrap(
       dynamic.int(result.unwrap(dict.get(data, field), dynamic.from(0))),
@@ -50,6 +56,7 @@ pub fn validate_min(changeset: Changeset, field: String, min: Int) -> Changeset 
   case dict.get(data, field) {
     Ok(value) if is_smaller ->
       Changeset(
+        table,
         data,
         list.append(
           [FieldError(field, "must be at least " <> int.to_string(min))],
@@ -68,7 +75,7 @@ pub fn validate_length(
   min: Int,
   max: Int,
 ) -> Changeset {
-  let Changeset(data, errors, valid) = changeset
+  let Changeset(table, data, errors, valid) = changeset
 
   case dict.get(data, field) {
     Ok(value) -> {
@@ -79,6 +86,7 @@ pub fn validate_length(
           case v_length {
             option.Some(len) if len < min || len > max ->
               Changeset(
+                table,
                 data,
                 list.append(
                   [

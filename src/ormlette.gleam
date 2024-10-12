@@ -11,6 +11,7 @@ import gleam/io
 import gleam/result
 import ormlette/changesets/changesets
 import ormlette/cli/generate
+import ormlette/repo/insert
 import shellout
 import simplifile
 
