@@ -1,5 +1,5 @@
 name = "ormlette"
-version = "1.0.1"
+version = "1.0.2"
 
 # Fill out these fields if you intend to generate HTML documentation or publish
 # your project to the Hex package manager.
@@ -24,6 +24,7 @@ decode = ">= 0.2.1 and < 1.0.0"
 gleam_pgo = ">= 0.14.0 and < 1.0.0"
 clip = ">= 0.5.0 and < 1.0.0"
 argv = ">= 1.0.2 and < 2.0.0"
+non_empty_list = ">= 2.1.0 and < 3.0.0"
 
 [dev-dependencies]
 gleeunit = ">= 1.0.0 and < 2.0.0"
