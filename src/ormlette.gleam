@@ -12,6 +12,7 @@ import gleam/result
 import ormlette/changesets/changesets
 import ormlette/cli/generate
 import ormlette/repo/insert
+import ormlette_setup/setup
 import ormlette_validate/valid
 import shellout
 import simplifile
@@ -22,6 +23,7 @@ import simplifile
 type Gen {
   Meta
   Orm
+  Db
 }
 
 /// This is for the Meta part
@@ -30,6 +32,15 @@ fn meta_command() {
   |> clip.add_help(
     "gen meta",
     "Generates metadata for Records using Glerd. Makes it so we can have proper __ FORGET NAME RN",
+  )
+}
+
+/// This is for the Db generation part
+fn db_command() {
+  clip.return(Db)
+  |> clip.add_help(
+    "gen db",
+    "Generates a database function that makes a db so its fun and niceies",
   )
 }
 
@@ -46,7 +57,11 @@ fn orm_command() {
 /// Main command
 ///
 fn command() {
-  clip.subcommands([#("meta", meta_command()), #("orm", orm_command())])
+  clip.subcommands([
+    #("meta", meta_command()),
+    #("orm", orm_command()),
+    #("db", db_command()),
+  ])
 }
 
 /// Main CLI args
@@ -69,6 +84,9 @@ pub fn main() {
         Meta -> {
           run_module("glerd")
           io.println("Ran module glerd")
+        }
+        Db -> {
+          setup.run()
         }
       }
       // io.debug(results)

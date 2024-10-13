@@ -1,0 +1,20 @@
+{> import ormlette_setup/types as s
+{> with dbinfo as s.DbInfo
+
+import gleam/pgo
+import gleam/option
+
+
+pub fn db() {
+    pgo.connect(
+      pgo.Config(
+        ..pgo.default_config(),
+        host: "{{dbinfo.host}}",
+        database: "{{dbinfo.database}}",
+        user: "{{dbinfo.user}}",
+        password: option.Some("{{dbinfo.pass}}"),
+        rows_as_map: True,
+        pool_size: 15,
+      ),
+    )
+}

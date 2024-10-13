@@ -7,6 +7,7 @@ packages = [
   { name = "cake", version = "1.1.2", build_tools = ["gleam"], requirements = ["gleam_stdlib"], otp_app = "cake", source = "hex", outer_checksum = "E94EAD4800A3CAE0B426E7093F8D82C10C3638D3D400CB95B5C6EF1FF9C3B4A4" },
   { name = "clip", version = "0.5.0", build_tools = ["gleam"], requirements = ["gleam_stdlib"], otp_app = "clip", source = "hex", outer_checksum = "C8F6FC12EF0907607C63411CBF51B350554FB276D1768A9CEE4CE1D78C8234A7" },
   { name = "decode", version = "0.2.1", build_tools = ["gleam"], requirements = ["gleam_stdlib"], otp_app = "decode", source = "hex", outer_checksum = "4727FC627B803E4F4FF0075B5F93BC022F9293A19B03BF44B5A4C64BF9E8EAE1" },
+  { name = "dot_env", version = "1.2.0", build_tools = ["gleam"], requirements = ["gleam_stdlib", "simplifile"], otp_app = "dot_env", source = "hex", outer_checksum = "F2B4815F1B5AF8F20A6EADBB393E715C4C35203EBD5BE8200F766EA83A0B18DE" },
   { name = "filepath", version = "1.0.0", build_tools = ["gleam"], requirements = ["gleam_stdlib"], otp_app = "filepath", source = "hex", outer_checksum = "EFB6FF65C98B2A16378ABC3EE2B14124168C0CE5201553DE652E2644DCFDB594" },
   { name = "fswalk", version = "3.0.2", build_tools = ["gleam"], requirements = ["gleam_community_path", "gleam_stdlib", "simplifile"], otp_app = "fswalk", source = "hex", outer_checksum = "F694726DDA0ED46113C7A0E16BDCA6E384BF9CE26501D4005557F8F2F13437F3" },
   { name = "glance", version = "1.0.0", build_tools = ["gleam"], requirements = ["gleam_stdlib", "glexer"], otp_app = "glance", source = "hex", outer_checksum = "1510D4A03C28880E62974389E5BF1A5A185036BA07392F1D769620706A9E042F" },
@@ -35,6 +36,7 @@ argv = { version = ">= 1.0.2 and < 2.0.0" }
 cake = { version = ">= 1.1.2 and < 2.0.0" }
 clip = { version = ">= 0.5.0 and < 1.0.0" }
 decode = { version = ">= 0.2.1 and < 1.0.0" }
+dot_env = { version = ">= 1.2.0 and < 2.0.0" }
 filepath = { version = ">= 1.0.0 and < 2.0.0" }
 gleam_pgo = { version = ">= 0.14.0 and < 1.0.0" }
 gleam_stdlib = { version = ">= 0.40.0 and < 1.0.0" }

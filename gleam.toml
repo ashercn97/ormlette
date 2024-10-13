@@ -28,6 +28,7 @@ non_empty_list = ">= 2.1.0 and < 3.0.0"
 glerd = ">= 4.3.0 and < 5.0.0"
 sprinkle = ">= 1.0.1 and < 2.0.0"
 gledo = ">= 1.0.1 and < 2.0.0"
+dot_env = ">= 1.2.0 and < 2.0.0"
 
 [dev-dependencies]
 gleeunit = ">= 1.0.0 and < 2.0.0"
