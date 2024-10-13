@@ -1,10 +1,12 @@
 import gleam/dict
-import gleam/dynamic.{type Dynamic}
+import gleam/dynamic
 import gleam/int
 import gleam/list
 import gleam/option
 import gleam/result
 import gleam/string
+
+import ormlette_validate/valid.{FieldValidator, Validator, validate_dict}
 
 // Define the Error and Changeset types.
 pub type Error {
@@ -15,110 +17,144 @@ pub type Error {
 pub type Changeset {
   Changeset(
     table: String,
-    data: dict.Dict(String, Dynamic),
+    data: dict.Dict(String, dynamic.Dynamic),
     errors: List(Error),
     valid: Bool,
   )
 }
 
 // Initialize a changeset with a dictionary.
-pub fn new(table: String, data: dict.Dict(String, Dynamic)) -> Changeset {
+pub fn new(table: String, data: dict.Dict(String, dynamic.Dynamic)) -> Changeset {
   Changeset(table, data, [], True)
 }
 
-// Validator to ensure a field is present (i.e., not None).
-pub fn validate_present(changeset: Changeset, fields: List(String)) -> Changeset {
-  let Changeset(table, data, errors, valid) = changeset
-
-  list.fold(fields, changeset, fn(changeset, field) {
-    case dict.get(data, field) {
-      Error(_) ->
-        Changeset(
-          table,
-          data,
-          list.append([FieldError(field, "must be present")], errors),
-          False,
-        )
-      Ok(_) -> changeset
-    }
-  })
+// Validator for minimum integer value.
+pub fn validate_min(changeset: Changeset, field: String, min: Int) -> Changeset {
+  validate_field(changeset, field, valid.min(min))
 }
 
-// Validator to ensure a field value has a minimum integer value.
-pub fn validate_min(changeset: Changeset, field: String, min: Int) -> Changeset {
+// Validator for maximum integer value.
+pub fn validate_max(changeset: Changeset, field: String, max: Int) -> Changeset {
+  validate_field(changeset, field, valid.max(max))
+}
+
+// Validator for checking non-empty values.
+pub fn validate_present(changeset: Changeset, fields: List(String)) -> Changeset {
+  let field_validators =
+    list.map(fields, fn(field) { FieldValidator(field, valid.is_not_empty()) })
+  validate_fields(changeset, field_validators)
+}
+
+// Validator for minimum string length.
+pub fn validate_min_length(
+  changeset: Changeset,
+  field: String,
+  min_length: Int,
+) -> Changeset {
+  validate_field(changeset, field, valid.has_min_length(min_length))
+}
+
+// Validator for positive integer values.
+pub fn validate_positive(changeset: Changeset, field: String) -> Changeset {
+  validate_field(changeset, field, valid.is_positive())
+}
+
+// Validator for negative integer values.
+pub fn validate_negative(changeset: Changeset, field: String) -> Changeset {
+  validate_field(changeset, field, valid.is_negative())
+}
+
+// Validator for checking number format.
+pub fn validate_number(changeset: Changeset, field: String) -> Changeset {
+  validate_field(changeset, field, valid.is_number())
+}
+
+// Validator for boolean values.
+pub fn validate_boolean(changeset: Changeset, field: String) -> Changeset {
+  validate_field(changeset, field, valid.is_boolean())
+}
+
+// Validator for string pattern matching.
+pub fn validate_regex(
+  changeset: Changeset,
+  field: String,
+  pattern: String,
+) -> Changeset {
+  validate_field(changeset, field, valid.matches_regex(pattern))
+}
+
+// Validator for checking if the value is in a specified list.
+pub fn validate_in_list(
+  changeset: Changeset,
+  field: String,
+  allowed_values: List(dynamic.Dynamic),
+) -> Changeset {
+  validate_field(changeset, field, valid.is_in_list(allowed_values))
+}
+
+// Generalized function to apply a field validator.
+fn validate_field(
+  changeset: Changeset,
+  field: String,
+  validator: valid.Validator(dynamic.Dynamic),
+) -> Changeset {
   let Changeset(table, data, errors, valid) = changeset
-  let is_smaller =
-    result.unwrap(
-      dynamic.int(result.unwrap(dict.get(data, field), dynamic.from(0))),
-      0,
-    )
-    < min
-  case dict.get(data, field) {
-    Ok(value) if is_smaller ->
+  let field_validator = FieldValidator(field, validator)
+
+  case validate_dict(data, [field_validator]) {
+    Ok(_) -> changeset
+    Error(new_errors) ->
+      Changeset(
+        table,
+        data,
+        list.append(errors, format_errors([field], new_errors)),
+        False,
+      )
+  }
+}
+
+// Helper function to apply multiple validators.
+fn validate_fields(
+  changeset: Changeset,
+  field_validators: List(valid.FieldValidator),
+) -> Changeset {
+  let Changeset(table, data, errors, valid) = changeset
+
+  case validate_dict(data, field_validators) {
+    Ok(_) -> changeset
+    Error(new_errors) ->
       Changeset(
         table,
         data,
         list.append(
-          [FieldError(field, "must be at least " <> int.to_string(min))],
           errors,
+          format_errors(
+            list.map(field_validators, fn(fv) {
+              case fv {
+                valid.FieldValidator(field, _) -> field
+              }
+            }),
+            new_errors,
+          ),
         ),
         False,
       )
-    _ -> changeset
   }
 }
 
-// Validator to ensure a field string length falls within a specified range.
-pub fn validate_length(
-  changeset: Changeset,
-  field: String,
-  min: Int,
-  max: Int,
-) -> Changeset {
-  let Changeset(table, data, errors, valid) = changeset
-
-  case dict.get(data, field) {
-    Ok(value) -> {
-      let v_string_result = dynamic.optional(dynamic.string)(value)
-      case v_string_result {
-        Ok(v_string) -> {
-          let v_length = option.map(v_string, string.length)
-          case v_length {
-            option.Some(len) if len < min || len > max ->
-              Changeset(
-                table,
-                data,
-                list.append(
-                  [
-                    FieldError(
-                      field,
-                      "length must be between "
-                        <> int.to_string(min)
-                        <> " and "
-                        <> int.to_string(max),
-                    ),
-                  ],
-                  errors,
-                ),
-                False,
-              )
-
-            _ -> changeset
-          }
-        }
-        Error(_) -> changeset
-      }
-    }
-    Error(_) -> changeset
-  }
-}
-
-// Function to check if a changeset is valid.
+// Check if the changeset is valid
 pub fn is_valid(changeset: Changeset) -> Bool {
   changeset.valid
 }
 
-// Function to retrieve errors from a changeset.
+// Retrieve errors from the changeset
 pub fn errors(changeset: Changeset) -> List(Error) {
   changeset.errors
+}
+
+// Format errors for the changeset
+fn format_errors(fields: List(String), messages: List(String)) -> List(Error) {
+  list.map(messages, fn(msg) {
+    FieldError(result.unwrap(list.first(fields), ""), msg)
+  })
 }

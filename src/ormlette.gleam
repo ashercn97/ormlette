@@ -12,6 +12,7 @@ import gleam/result
 import ormlette/changesets/changesets
 import ormlette/cli/generate
 import ormlette/repo/insert
+import ormlette_validate/valid
 import shellout
 import simplifile
 
