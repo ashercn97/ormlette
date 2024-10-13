@@ -14,6 +14,7 @@ packages = [
   { name = "gleam_pgo", version = "0.14.0", build_tools = ["gleam"], requirements = ["gleam_stdlib", "pgo"], otp_app = "gleam_pgo", source = "hex", outer_checksum = "12256A7F351E994A6E43AB67276DD8AACE752991C013F48A288C4A848F3A9758" },
   { name = "gleam_stdlib", version = "0.40.0", build_tools = ["gleam"], requirements = [], otp_app = "gleam_stdlib", source = "hex", outer_checksum = "86606B75A600BBD05E539EB59FABC6E307EEEA7B1E5865AFB6D980A93BCB2181" },
   { name = "gleamyshell", version = "2.0.1", build_tools = ["gleam"], requirements = ["gleam_stdlib"], otp_app = "gleamyshell", source = "hex", outer_checksum = "14AE384BC6CBE520A0FCC790B44B2A5A94921E5C7BE67713CDCF07A7663D3ACD" },
+  { name = "gledo", version = "1.0.1", build_tools = ["gleam"], requirements = ["gleam_stdlib"], otp_app = "gledo", source = "hex", outer_checksum = "AD336C7D73A2A912E99BBDC1D456216307D4334AF72FC958F20BC5BB63FDCB9E" },
   { name = "gleeunit", version = "1.2.0", build_tools = ["gleam"], requirements = ["gleam_stdlib"], otp_app = "gleeunit", source = "hex", outer_checksum = "F7A7228925D3EE7D0813C922E062BFD6D7E9310F0BEE585D3A42F3307E3CFD13" },
   { name = "glerd", version = "4.3.0", build_tools = ["gleam"], requirements = ["fswalk", "glance", "gleam_stdlib", "gleamyshell", "glexer", "gluple", "simplifile"], otp_app = "glerd", source = "hex", outer_checksum = "99897AD4B302A0911868631176E801F32DD50FAB2E4AEF6BB210D69CC3173A04" },
   { name = "glexer", version = "1.0.1", build_tools = ["gleam"], requirements = ["gleam_stdlib"], otp_app = "glexer", source = "hex", outer_checksum = "BD477AD657C2B637FEF75F2405FAEFFA533F277A74EF1A5E17B55B1178C228FB" },
@@ -37,6 +38,7 @@ decode = { version = ">= 0.2.1 and < 1.0.0" }
 filepath = { version = ">= 1.0.0 and < 2.0.0" }
 gleam_pgo = { version = ">= 0.14.0 and < 1.0.0" }
 gleam_stdlib = { version = ">= 0.40.0 and < 1.0.0" }
+gledo = { version = ">= 1.0.1 and < 2.0.0" }
 gleeunit = { version = ">= 1.0.0 and < 2.0.0" }
 glerd = { version = ">= 4.3.0 and < 5.0.0" }
 globlin = { version = ">= 2.0.2 and < 3.0.0" }
