@@ -11,6 +11,8 @@ pub fn render_builder(paths paths: List(String)) -> StringBuilder {
 import ormlette/templates/tables
 import ormlette/templates/utils/to_string
 import ormlette/templates/decoder_type
+import glerd_gen
+import ormlette/templates/utils/record_info
 
 ")
     let builder = list.fold(paths, builder, fn(builder, p: String) {
@@ -48,7 +50,10 @@ pub fn main() {
 })
     let builder = string_builder.append(builder, "])
     |> to_string.to_file(\"src/eggs/decode.gleam\", to_string.Write)
-}")
+
+    record_info.generate_all_to_dicts(record_info.find_records(glerd_gen.record_info), \"src/eggs/convert.gleam\")
+}
+")
 
     builder
 }
