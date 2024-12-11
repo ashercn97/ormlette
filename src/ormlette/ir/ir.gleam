@@ -34,7 +34,7 @@ pub fn to_ir(table: c.Table) -> TableIR {
 
 fn column_to_ir(column: c.Column) -> ColumnIR {
   let constraints =
-    list.concat([
+    list.flatten([
       case column.is_primary {
         True -> [PrimaryKey]
         False -> []

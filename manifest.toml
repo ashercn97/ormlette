@@ -13,7 +13,8 @@ packages = [
   { name = "glance", version = "1.0.0", build_tools = ["gleam"], requirements = ["gleam_stdlib", "glexer"], otp_app = "glance", source = "hex", outer_checksum = "1510D4A03C28880E62974389E5BF1A5A185036BA07392F1D769620706A9E042F" },
   { name = "gleam_community_path", version = "0.1.0", build_tools = ["gleam"], requirements = ["gleam_stdlib"], otp_app = "gleam_community_path", source = "hex", outer_checksum = "916C2829E2ED81036BBA180CFD5E8633D05E25C304FDF6E3BC8A048459B89725" },
   { name = "gleam_pgo", version = "0.14.0", build_tools = ["gleam"], requirements = ["gleam_stdlib", "pgo"], otp_app = "gleam_pgo", source = "hex", outer_checksum = "12256A7F351E994A6E43AB67276DD8AACE752991C013F48A288C4A848F3A9758" },
-  { name = "gleam_stdlib", version = "0.40.0", build_tools = ["gleam"], requirements = [], otp_app = "gleam_stdlib", source = "hex", outer_checksum = "86606B75A600BBD05E539EB59FABC6E307EEEA7B1E5865AFB6D980A93BCB2181" },
+  { name = "gleam_regexp", version = "1.0.0", build_tools = ["gleam"], requirements = ["gleam_stdlib"], otp_app = "gleam_regexp", source = "hex", outer_checksum = "A3655FDD288571E90EE9C4009B719FEF59FA16AFCDF3952A76A125AF23CF1592" },
+  { name = "gleam_stdlib", version = "0.47.0", build_tools = ["gleam"], requirements = [], otp_app = "gleam_stdlib", source = "hex", outer_checksum = "3B22D46743C46498C8355365243327AC731ECD3959216344FA9CF9AD348620AC" },
   { name = "gleamyshell", version = "2.0.1", build_tools = ["gleam"], requirements = ["gleam_stdlib"], otp_app = "gleamyshell", source = "hex", outer_checksum = "14AE384BC6CBE520A0FCC790B44B2A5A94921E5C7BE67713CDCF07A7663D3ACD" },
   { name = "gledo", version = "1.0.1", build_tools = ["gleam"], requirements = ["gleam_stdlib"], otp_app = "gledo", source = "hex", outer_checksum = "AD336C7D73A2A912E99BBDC1D456216307D4334AF72FC958F20BC5BB63FDCB9E" },
   { name = "gleeunit", version = "1.2.0", build_tools = ["gleam"], requirements = ["gleam_stdlib"], otp_app = "gleeunit", source = "hex", outer_checksum = "F7A7228925D3EE7D0813C922E062BFD6D7E9310F0BEE585D3A42F3307E3CFD13" },
@@ -39,6 +40,7 @@ decode = { version = ">= 0.2.1 and < 1.0.0" }
 dot_env = { version = ">= 1.2.0 and < 2.0.0" }
 filepath = { version = ">= 1.0.0 and < 2.0.0" }
 gleam_pgo = { version = ">= 0.14.0 and < 1.0.0" }
+gleam_regexp = { version = ">= 1.0.0 and < 2.0.0" }
 gleam_stdlib = { version = ">= 0.40.0 and < 1.0.0" }
 gledo = { version = ">= 1.0.1 and < 2.0.0" }
 gleeunit = { version = ">= 1.0.0 and < 2.0.0" }
