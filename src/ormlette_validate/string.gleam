@@ -1,4 +1,4 @@
-import gleam/regex
+import gleam/regexp
 import gleam/string
 import non_empty_list
 import ormlette_validate/valid
@@ -17,9 +17,9 @@ pub fn is_not_empty(error: e) -> valid.Validator(String, String, e) {
 pub fn is_email(error: e) -> valid.Validator(String, String, e) {
   fn(value: String) {
     let pattern = "^([\\w\\d]+)(\\.[\\w\\d]+)*(\\+[\\w\\d]+)?@[\\w\\d\\.]+$"
-    case regex.from_string(pattern) {
+    case regexp.from_string(pattern) {
       Ok(re) -> {
-        case regex.check(with: re, content: value) {
+        case regexp.check(with: re, content: value) {
           True -> Ok(value)
           False -> Error(non_empty_list.new(error, []))
         }
